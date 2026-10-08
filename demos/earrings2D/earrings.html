@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="content-language" content="en-EN" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Ear rings | Demo</title>
+    
+    <!-- INCLUDE WebAR.rocks.face MAIN SCRIPT -->
+    <script src="../../dist/WebARRocksFace.js"></script>
+
+    <!-- INCLUDE CANVAS2D HELPER -->
+    <script src="../../helpers/WebARRocksFaceCanvas2DHelper.js"></script>
+
+    <!-- INCLUDE RESIZER HELPER -->
+    <script src="../../helpers/WebARRocksResizer.js"></script>
+
+    <!-- INCLUDE LANDMARKS STABILIZER -->
+    <script src="../../helpers/landmarksStabilizers/WebARRocksLMStabilizer.js"></script>
+
+    <!-- INCLUDE DEMO SCRIPT -->
+    <script src="./main.js"></script>
+
+    <style type="text/css">
+      body {
+        margin: 0;
+      }
+      canvas {
+        transform: scaleX(-1);
+        position: absolute;
+        max-width:100vw;
+        max-height:100vh;
+        
+      }
+      #overlayCanvas {
+        z-index: 10;
+      }
+      #WebARRocksFaceCanvas {
+        z-index: 1;
+      }
+      .all-jewels {
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 11;
+        left: 24%;
+        gap: 2rem;
+      }
+
+      .all-jewels img {
+        width: 100px;
+        height: 100px;
+        cursor: pointer;
+        background-color: whitesmoke;
+      }
+
+      @media (max-width: 850px) {
+        .all-jewels {
+          left: 0;
+          width: 100%;
+          gap: 0.7rem;
+          overflow-x: scroll;
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- canvas where the earring will be displayed: -->
+    <div style="height:90vh">
+      <canvas width="600" height="600" id='overlayCanvas'></canvas>
+
+      <!-- canvas where the video will be displayed: -->
+      <canvas width="600" height="600" id='WebARRocksFaceCanvas'></canvas>
+    </div>
+    <div class="all-jewels">
+      <img class="earring" src="images/earrings/earring-4.webp" />
+      <img class="earring" src="images/earrings/earring-5.webp" />
+      <img class="earring" src="images/earrings/earring-6.webp" />
+      <img class="earring" src="images/earrings/earring-3.png" />
+      <img class="earring" src="images/earrings/single_ear_ring.png" />
+      <!-- <img /> -->
+    </div>
+  </body>
+</html>
+ 

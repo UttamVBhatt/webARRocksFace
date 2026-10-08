@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Previous head content remains the same until title -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Amado - Furniture Ecommerce Template | Home</title>
+    <link rel="icon" href="img/core-img/favicon.ico" />
+    <link rel="stylesheet" href="css/core-style.css" />
+    <link rel="stylesheet" href="style.css" />
+    <!-- Add custom styles for dialog -->
+    <style>
+      .image-dialog {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .image-dialog.active {
+        display: flex;
+      }
+
+      .dialog-content {
+        max-width: 90%;
+        max-height: 90vh;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        position: relative;
+      }
+
+      .dialog-content img {
+        max-width: 100%;
+        max-height: 80vh;
+        object-fit: contain;
+      }
+
+      .close-dialog {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #333;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Previous content remains the same until products-catagories-area -->
+
+    <!-- Add dialog element -->
+    <div class="image-dialog" id="imageDialog">
+      <div class="dialog-content">
+        <button class="close-dialog" onclick="closeDialog()">&times;</button>
+        <img id="dialogImage" src="" alt="Product Image" />
+      </div>
+    </div>
+
+    <!-- Product Catagories Area Start -->
+    <div class="products-catagories-area clearfix">
+      <div class="amado-pro-catagory clearfix">
+        <!-- Single Catagory -->
+        <div class="single-products-catagory clearfix">
+          <div
+            class="category-item"
+            onclick="showImage('img/necklaces/necklace-1.jpg')"
+          >
+            <img src="img/necklaces/necklace-1.jpg" alt="" />
+            <!-- Hover Content -->
+            <div class="hover-content">
+              <div class="line"></div>
+              <p>From $180</p>
+              <h4>Modern Chair</h4>
+            </div>
+          </div>
+        </div>
+
+        <!-- Single Catagory -->
+        <div class="single-products-catagory clearfix">
+          <div
+            class="category-item"
+            onclick="showImage('img/earrings/earring-1.jpg')"
+          >
+            <img src="img/earrings/earring-1.jpg" alt="" />
+            <!-- Hover Content -->
+            <div class="hover-content">
+              <div class="line"></div>
+              <p>From $180</p>
+              <h4>Minimalistic Plant Pot</h4>
+            </div>
+          </div>
+        </div>
+
+        <!-- Single Catagory -->
+        <div class="single-products-catagory clearfix">
+          <div
+            class="category-item"
+            onclick="showImage('img/necklaces/necklace-2.jpg')"
+          >
+            <img src="img/necklaces/necklace-2.jpg" alt="" />
+            <!-- Hover Content -->
+            <div class="hover-content">
+              <div class="line"></div>
+              <p>From $180</p>
+              <h4>Modern Chair</h4>
+            </div>
+          </div>
+        </div>
+
+        <!-- Continue with the same pattern for other categories -->
+        <!-- ... other categories ... -->
+      </div>
+    </div>
+    <!-- Product Catagories Area End -->
+
+    <!-- Rest of the content remains the same until before closing body tag -->
+
+    <!-- Add custom JavaScript before closing body -->
+    <script>
+      function showImage(imageSrc) {
+        const dialog = document.getElementById("imageDialog");
+        const dialogImage = document.getElementById("dialogImage");
+        dialogImage.src = imageSrc;
+        dialog.classList.add("active");
+      }
+
+      function closeDialog() {
+        const dialog = document.getElementById("imageDialog");
+        dialog.classList.remove("active");
+      }
+
+      // Close dialog when clicking outside the image
+      document
+        .getElementById("imageDialog")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeDialog();
+          }
+        });
+    </script>
+
+    <!-- Original scripts -->
+    <script src="js/jquery/jquery-2.2.4.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/active.js"></script>
+  </body>
+</html>
