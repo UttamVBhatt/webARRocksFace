@@ -1,765 +1,1072 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="description" content="Satsite Jewel - Try on necklaces, earrings and bracelets virtually using your camera." />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <title>Satsite Jewel | Virtual Try-On</title>
-  <base href="/demos/earrings2D/" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="Satsite Jewel - Try on necklaces, earrings and bracelets virtually using your camera."
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Satsite Jewel | Virtual Try-On</title>
+    <base href="/demos/earrings2D/" />
 
-  <link rel="icon" href="img/core-img/favicon.png" />
-  <link rel="stylesheet" href="css/core-style.css" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="icon" href="img/core-img/favicon.png" />
+    <link rel="stylesheet" href="css/core-style.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- WebARRocksFace scripts (needed for earring/necklace try-on) -->
-  <script src="../../dist/WebARRocksFace.js"></script>
-  <script src="../../helpers/WebARRocksFaceCanvas2DHelper.js"></script>
-  <script src="../../helpers/WebARRocksResizer.js"></script>
-  <script src="../../helpers/landmarksStabilizers/WebARRocksLMStabilizer.js"></script>
+    <!-- WebARRocksFace scripts (needed for earring/necklace try-on) -->
+    <script src="../../dist/WebARRocksFace.js"></script>
+    <script src="../../helpers/WebARRocksFaceCanvas2DHelper.js"></script>
+    <script src="../../helpers/WebARRocksResizer.js"></script>
+    <script src="../../helpers/landmarksStabilizers/WebARRocksLMStabilizer.js"></script>
 
-  <style>
-    * { box-sizing: border-box; }
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: 'Outfit', sans-serif;
-      margin: 0;
-    }
+      body {
+        font-family: "Outfit", sans-serif;
+        margin: 0;
+      }
 
-    /* ── Announcement bar ── */
-    .topnav {
-      background: linear-gradient(90deg, #1a0533, #4b1078, #1a0533);
-      background-size: 200% auto;
-      animation: shimmer 4s linear infinite;
-      color: #fff;
-      text-align: center;
-      padding: 10px 0;
-      font-size: 0.9rem;
-      letter-spacing: 0.5px;
-    }
-    @keyframes shimmer {
-      0%   { background-position: 0% center; }
-      100% { background-position: 200% center; }
-    }
-    .dt-shop-now {
-      display: inline-block;
-      padding: 2px 16px;
-      color: #fff;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,0.6);
-      margin-left: 8px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .dt-shop-now:hover { background: rgba(255,255,255,0.15); }
+      /* ── Announcement bar ── */
+      .topnav {
+        background: linear-gradient(90deg, #1a0533, #4b1078, #1a0533);
+        background-size: 200% auto;
+        animation: shimmer 4s linear infinite;
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 0% center;
+        }
+        100% {
+          background-position: 200% center;
+        }
+      }
+      .dt-shop-now {
+        display: inline-block;
+        padding: 2px 16px;
+        color: #fff;
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        margin-left: 8px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      .dt-shop-now:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
 
-    /* ── Category tabs ── */
-    .category-tabs {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      padding: 24px 16px 8px;
-      flex-wrap: wrap;
-    }
-    .tab-btn {
-      padding: 10px 28px;
-      border-radius: 30px;
-      border: 2px solid #7c3aed;
-      background: transparent;
-      color: #7c3aed;
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      letter-spacing: 0.3px;
-    }
-    .tab-btn:hover,
-    .tab-btn.active {
-      background: #7c3aed;
-      color: #fff;
-      box-shadow: 0 4px 20px rgba(124,58,237,0.35);
-    }
+      /* ── Category tabs ── */
+      .category-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        padding: 24px 16px 8px;
+        flex-wrap: wrap;
+      }
+      .tab-btn {
+        padding: 10px 28px;
+        border-radius: 30px;
+        border: 2px solid #7c3aed;
+        background: transparent;
+        color: #7c3aed;
+        font-family: "Outfit", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        letter-spacing: 0.3px;
+      }
+      .tab-btn:hover,
+      .tab-btn.active {
+        background: #7c3aed;
+        color: #fff;
+        box-shadow: 0 4px 20px rgba(124, 58, 237, 0.35);
+      }
 
-    /* ── Product grid ── */
-    .category-section { display: none; }
-    .category-section.visible { display: block; }
+      /* ── Product grid ── */
+      .category-section {
+        display: none;
+      }
+      .category-section.visible {
+        display: block;
+      }
 
-    .single-products-catagory a {
-      padding: 10px;
-      background: #f8f4ff;
-      border-radius: 16px;
-      margin: 10px;
-      display: block;
-      text-decoration: none;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .single-products-catagory a:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 30px rgba(124,58,237,0.15);
-    }
-    .single-products-catagory .hover-content { padding: 10px; }
-    .single-products-catagory h4 {
-      font-family: 'Outfit', sans-serif;
-      color: #1a0533 !important;
-      padding: 5px;
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-    .single-products-catagory p {
-      color: #7c3aed;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
+      .single-products-catagory a {
+        padding: 10px;
+        background: #f8f4ff;
+        border-radius: 16px;
+        margin: 10px;
+        display: block;
+        text-decoration: none;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .single-products-catagory a:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
+      }
+      .single-products-catagory .hover-content {
+        padding: 10px;
+      }
+      .single-products-catagory h4 {
+        font-family: "Outfit", sans-serif;
+        color: #1a0533 !important;
+        padding: 5px;
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+      .single-products-catagory p {
+        color: #7c3aed;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
 
-    /* ── Star ratings ── */
-    .star { text-align: center; margin: 4px 0 8px; }
-    .checked { color: #f59e0b; }
+      /* ── Star ratings ── */
+      .star {
+        text-align: center;
+        margin: 4px 0 8px;
+      }
+      .checked {
+        color: #f59e0b;
+      }
 
-    /* ── Try-On button ── */
-    .try-button-container {
-      text-align: center;
-      padding: 6px 10px 4px;
-    }
-    .try-button-container button {
-      background: linear-gradient(135deg, #7c3aed, #a855f7);
-      color: #fff;
-      border: none;
-      border-radius: 25px;
-      padding: 9px 22px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 3px 12px rgba(124,58,237,0.3);
-      letter-spacing: 0.3px;
-    }
-    .try-button-container button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(124,58,237,0.45);
-    }
+      /* ── Try-On button ── */
+      .try-button-container {
+        text-align: center;
+        padding: 6px 10px 4px;
+      }
+      .try-button-container button {
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        color: #fff;
+        border: none;
+        border-radius: 25px;
+        padding: 9px 22px;
+        font-family: "Outfit", sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        box-shadow: 0 3px 12px rgba(124, 58, 237, 0.3);
+        letter-spacing: 0.3px;
+      }
+      .try-button-container button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
+      }
 
-    /* ── AR Dialog (face - earrings / necklace) ── */
-    .image-dialog {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.82);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      backdrop-filter: blur(4px);
-    }
-    .image-dialog.active { display: flex; }
+      /* ── AR Dialog (face - earrings / necklace) ── */
+      .image-dialog {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.82);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(4px);
+      }
+      .image-dialog.active {
+        display: flex;
+      }
 
-    .dialog-content {
-      width: 600px;
-      min-height: 90vh;
-      background: #fff;
-      padding: 20px;
-      border-radius: 16px;
-      position: relative;
-      overflow: hidden;
-    }
+      .dialog-content {
+        width: 600px;
+        min-height: 90vh;
+        background: #fff;
+        padding: 20px;
+        border-radius: 16px;
+        position: relative;
+        overflow: hidden;
+      }
 
-    .close-dialog {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: rgba(255,255,255,0.9);
-      border: none;
-      font-size: 1.4rem;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      cursor: pointer;
-      color: #333;
-      z-index: 1010;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-    .close-dialog:hover { background: #f0f0f0; }
+      .close-dialog {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        font-size: 1.4rem;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        cursor: pointer;
+        color: #333;
+        z-index: 1010;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+      .close-dialog:hover {
+        background: #f0f0f0;
+      }
 
-    canvas.ar-canvas {
-      transform: scaleX(-1);
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      left: 0; top: 0; bottom: 0; right: 0;
-      object-fit: cover;
-    }
-    #overlayCanvas { z-index: 10; }
-    #WebARRocksFaceCanvas { z-index: 1; }
+      canvas.ar-canvas {
+        transform: scaleX(-1);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        object-fit: cover;
+      }
+      #overlayCanvas {
+        z-index: 10;
+      }
+      #WebARRocksFaceCanvas {
+        z-index: 1;
+      }
 
-    /* ── Bracelet Dialog ── */
-    #braceletDialog {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.82);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      backdrop-filter: blur(4px);
-    }
-    #braceletDialog.active { display: flex; }
+      /* ── Bracelet Dialog ── */
+      #braceletDialog {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.82);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(4px);
+      }
+      #braceletDialog.active {
+        display: flex;
+      }
 
-    .bracelet-dialog-content {
-      width: 700px;
-      max-width: 96vw;
-      min-height: 85vh;
-      background: #fff;
-      border-radius: 16px;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
+      .bracelet-dialog-content {
+        width: 700px;
+        max-width: 96vw;
+        min-height: 85vh;
+        background: #fff;
+        border-radius: 16px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
 
-    .bracelet-header {
-      padding: 14px 20px;
-      background: linear-gradient(135deg, #7c3aed, #a855f7);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-weight: 600;
-      font-size: 1rem;
-    }
+      .bracelet-header {
+        padding: 14px 20px;
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: 600;
+        font-size: 1rem;
+      }
 
-    .bracelet-viewport {
-      flex: 1;
-      position: relative;
-      background: #000;
-      min-height: 500px;
-    }
+      .bracelet-viewport {
+        flex: 1;
+        position: relative;
+        background: #000;
+        min-height: 500px;
+      }
 
-    #braceletVideo {
-      position: absolute;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      transform: scaleX(-1);
-    }
-    #braceletOverlayCanvas {
-      position: absolute;
-      width: 100%; height: 100%;
-      top: 0; left: 0;
-      transform: scaleX(-1);
-      z-index: 5;
-    }
+      #braceletVideo {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scaleX(-1);
+      }
+      #braceletOverlayCanvas {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        transform: scaleX(-1);
+        z-index: 5;
+      }
 
-    .bracelet-hint {
-      padding: 10px 16px;
-      text-align: center;
-      font-size: 0.82rem;
-      color: #6b7280;
-      background: #f8f4ff;
-    }
+      .bracelet-hint {
+        padding: 10px 16px;
+        text-align: center;
+        font-size: 0.82rem;
+        color: #6b7280;
+        background: #f8f4ff;
+      }
 
-    /* ── Responsive ── */
-    @media (max-width: 650px) {
-      .dialog-content { width: 98vw; min-height: 80vh; }
-      .bracelet-dialog-content { width: 98vw; min-height: 75vh; }
-      .bracelet-viewport { min-height: 340px; }
-      #bnr { margin-top: 16%; }
-      .mobile-nav { background: #2b2d2c; }
-    }
-    @media (max-width: 350px) {
-      .dialog-content { width: 100vw; }
-    }
-  </style>
-</head>
+      /* ── Responsive ── */
+      @media (max-width: 650px) {
+        .dialog-content {
+          width: 98vw;
+          min-height: 80vh;
+        }
+        .bracelet-dialog-content {
+          width: 98vw;
+          min-height: 75vh;
+        }
+        .bracelet-viewport {
+          min-height: 340px;
+        }
+        #bnr {
+          margin-top: 16%;
+        }
+        .mobile-nav {
+          background: #2b2d2c;
+        }
+      }
+      @media (max-width: 350px) {
+        .dialog-content {
+          width: 100vw;
+        }
+      }
+    </style>
+  </head>
 
-<body>
-  <!-- ── Face AR Dialog (earrings / necklace) ── -->
-  <div class="image-dialog" id="imageDialog">
-    <div class="dialog-content">
-      <button class="close-dialog" id="closeFaceBtn" onclick="closeDialog()" title="Close">&times;</button>
-      <canvas class="ar-canvas" width="600" height="600" id="overlayCanvas"></canvas>
-      <canvas class="ar-canvas" width="600" height="600" id="WebARRocksFaceCanvas"></canvas>
+  <body>
+    <!-- ── Face AR Dialog (earrings / necklace) ── -->
+    <div class="image-dialog" id="imageDialog">
+      <div class="dialog-content">
+        <button
+          class="close-dialog"
+          id="closeFaceBtn"
+          onclick="closeDialog()"
+          title="Close"
+        >
+          &times;
+        </button>
+        <canvas
+          class="ar-canvas"
+          width="600"
+          height="600"
+          id="overlayCanvas"
+        ></canvas>
+        <canvas
+          class="ar-canvas"
+          width="600"
+          height="600"
+          id="WebARRocksFaceCanvas"
+        ></canvas>
+      </div>
     </div>
-  </div>
 
-  <!-- ── Bracelet AR Dialog ── -->
-  <div id="braceletDialog">
-    <div class="bracelet-dialog-content">
-      <div class="bracelet-header">
-        <span>✋ Bracelet Try-On — Hold your wrist up to the camera</span>
-        <button onclick="closeBraceletDialog()" style="background:rgba(255,255,255,0.25);border:none;color:#fff;border-radius:50%;width:30px;height:30px;font-size:1.1rem;cursor:pointer;">&times;</button>
-      </div>
-      <div class="bracelet-viewport">
-        <video id="braceletVideo" autoplay muted playsinline></video>
-        <canvas id="braceletOverlayCanvas"></canvas>
-      </div>
-      <div class="bracelet-hint">
-        💡 Show your full hand and wrist in good lighting for the best experience
-      </div>
-    </div>
-  </div>
-
-  <!-- ── Search Wrapper ── -->
-  <div class="search-wrapper section-padding-100">
-    <div class="search-close"><i class="fa fa-close" aria-hidden="true"></i></div>
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div class="search-content">
-            <form action="#" method="get">
-              <input type="search" name="search" id="search" placeholder="Type your keyword..." />
-              <button type="submit"><img src="img/core-img/search.png" alt="" /></button>
-            </form>
-          </div>
+    <!-- ── Bracelet AR Dialog ── -->
+    <div id="braceletDialog">
+      <div class="bracelet-dialog-content">
+        <div class="bracelet-header">
+          <span>✋ Bracelet Try-On — Hold your wrist up to the camera</span>
+          <button
+            onclick="closeBraceletDialog()"
+            style="
+              background: rgba(255, 255, 255, 0.25);
+              border: none;
+              color: #fff;
+              border-radius: 50%;
+              width: 30px;
+              height: 30px;
+              font-size: 1.1rem;
+              cursor: pointer;
+            "
+          >
+            &times;
+          </button>
+        </div>
+        <div class="bracelet-viewport">
+          <video id="braceletVideo" autoplay muted playsinline></video>
+          <canvas id="braceletOverlayCanvas"></canvas>
+        </div>
+        <div class="bracelet-hint">
+          💡 Show your full hand and wrist in good lighting for the best
+          experience
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ── Announcement bar ── -->
-  <div class="topnav">
-    <span>✨ Celebrate with Diamonds — Up to 20% off*</span>
-    <span class="dt-shop-now">Shop Now</span>
-  </div>
-
-  <!-- ── Main Content ── -->
-  <div class="main-content-wrapper d-flex clearfix">
-    <img src="b.jpg" style="height:auto;width:100%;" id="bnr" alt="Banner" />
-
-    <!-- Mobile Nav -->
-    <div class="mobile-nav">
-      <div class="amado-navbar-brand">
-        <a href="index.html"><img src="img/core-img/logo.png" alt="" /></a>
+    <!-- ── Search Wrapper ── -->
+    <div class="search-wrapper section-padding-100">
+      <div class="search-close">
+        <i class="fa fa-close" aria-hidden="true"></i>
       </div>
-      <div class="amado-navbar-toggler">
-        <span></span><span></span><span></span>
-      </div>
-    </div>
-
-    <!-- Header -->
-    <header class="header-area clearfix">
-      <div class="nav-close"><i class="fa fa-close" aria-hidden="true"></i></div>
-      <div class="logo">
-        <a href="index.html"><img src="img/core-img/logo.png" alt="" /></a>
-      </div>
-      <nav class="amado-nav">
-        <ul>
-          <li class="active"><a href="index.html">Home</a></li>
-        </ul>
-      </nav>
-      <div class="banner-container">
-        <img src="v.jpg" alt="Banner" />
-        <div class="social-info d-flex justify-content-between mt-30">
-          <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
-          <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-          <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-          <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-        </div>
-      </div>
-    </header>
-
-    <!-- ── Category Tabs & Product Grid ── -->
-    <div class="products-catagories-area clearfix" style="width:100%;">
-
-      <!-- Tabs -->
-      <div class="category-tabs">
-        <button class="tab-btn active" id="tab-necklace" onclick="switchTab('necklace')">💎 Necklaces</button>
-        <button class="tab-btn"        id="tab-earring"  onclick="switchTab('earring')">💫 Earrings</button>
-        <button class="tab-btn"        id="tab-bracelet" onclick="switchTab('bracelet')">📿 Bracelets</button>
-      </div>
-
-      <!-- ── NECKLACES ── -->
-      <div class="amado-pro-catagory clearfix category-section visible" id="section-necklace">
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img class="necklace" src="img/new-neck-images/necklace-1.png" alt="Golden Horizon Pendant" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $180</p>
-              <h4>Golden Horizon Pendant</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('img/new-neck-images/necklace-1.png', 'neck')">📷 Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-          </div>
-        </div>
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img class="necklace" src="img/new-neck-images/necklace-2.png" alt="Sapphire Whisper Chain" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $180</p>
-              <h4>Sapphire Whisper Chain</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('img/new-neck-images/necklace-2.png', 'neck')">📷 Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-          </div>
-        </div>
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img class="necklace" src="img/necklaces/necklace-3.png" alt="Amethyst Blossom Collar" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $18</p>
-              <h4>Amethyst Blossom Collar</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('img/necklaces/necklace-3.png', 'neck')">📷 Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-          </div>
-        </div>
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img class="necklace" src="img/new-neck-images/necklace-6.png" alt="Celestial Glow Gold Choker" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $318</p>
-              <h4>Celestial Glow Gold Choker</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('img/new-neck-images/necklace-6.png', 'neck')">📷 Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-          </div>
-        </div>
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img class="necklace" src="img/new-neck-images/necklace-5.png" alt="Ethereal Pearl Strand" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $318</p>
-              <h4>Ethereal Pearl Strand</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('img/new-neck-images/necklace-5.png', 'neck')">📷 Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-          </div>
-        </div>
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img class="necklace" src="img/new-neck-images/up-neck-1.png" alt="Diamond Sparkle Choker" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $318</p>
-              <h4>Diamond Sparkle Choker</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('img/new-neck-images/up-neck-1.png', 'neck')">📷 Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-          </div>
-        </div>
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img class="necklace" src="img/new-neck-images/necklace-8.png" alt="Rose Gold Infinity Necklace" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $318</p>
-              <h4>Rose Gold Infinity Necklace</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('img/new-neck-images/necklace-8.png', 'neck')">📷 Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-          </div>
-        </div>
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img class="necklace" src="img/new-neck-images/necklace-9.png" alt="Crystal Cascade Necklace" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $318</p>
-              <h4>Crystal Cascade Necklace</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('img/new-neck-images/necklace-9.png', 'neck')">📷 Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>
-          </div>
-        </div>
-
-      </div><!-- /section-necklace -->
-
-      <!-- ── EARRINGS ── -->
-      <div class="amado-pro-catagory clearfix category-section" id="section-earring">
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img class="earring" src="images/earrings/t-ear-1.png" alt="Moonlit Teardrops"
-                 style="height:16rem; object-fit:contain" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $180</p>
-              <h4>Moonlit Teardrops</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('images/earrings/t-ear-1.png', 'ear')">📷 Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-          </div>
-        </div>
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img class="earring" src="images/earrings/t-ear-2.png" alt="Crimson Halo Studs"
-                 style="height:16rem; object-fit:contain" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $180</p>
-              <h4>Crimson Halo Studs</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('images/earrings/t-ear-2.png', 'ear')">📷 Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-          </div>
-        </div>
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img class="earring" src="images/earrings/t-ear-3.png" alt="Silver Cascade Hoops"
-                 style="height:16rem; object-fit:contain" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $320</p>
-              <h4>Silver Cascade Hoops</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('images/earrings/t-ear-3.png', 'ear')">📷 Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-          </div>
-        </div>
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img class="earring" src="images/earrings/t-ear-4.png" alt="Emerald Breeze Drops"
-                 style="height:16rem; object-fit:contain" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $318</p>
-              <h4>Emerald Breeze Drops</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('images/earrings/t-ear-4.png', 'ear')">📷 Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-          </div>
-        </div>
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img class="earring" src="images/earrings/earring-3.png" alt="Golden Drop Earrings"
-                 style="height:16rem; object-fit:contain" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $240</p>
-              <h4>Golden Drop Earrings</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('images/earrings/earring-3.png', 'ear')">📷 Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-          </div>
-        </div>
-
-      </div><!-- /section-earring -->
-
-      <!-- ── BRACELETS ── -->
-      <div class="amado-pro-catagory clearfix category-section" id="section-bracelet">
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img src="bracelet.png" alt="Classic Gold Bracelet"
-                 style="height:14rem; object-fit:contain; padding:10px;" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $220</p>
-              <h4>Classic Gold Bracelet</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('bracelet.png', 'bracelet')">✋ Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-          </div>
-        </div>
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img src="f.png" alt="Diamond Tennis Bracelet"
-                 style="height:14rem; object-fit:contain; padding:10px;" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $480</p>
-              <h4>Diamond Tennis Bracelet</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('f.png', 'bracelet')">✋ Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-          </div>
-        </div>
-
-        <div class="single-products-catagory clearfix">
-          <a>
-            <img src="bracelet.png" alt="Rose Gold Bangle"
-                 style="height:14rem; object-fit:contain; padding:10px; filter:hue-rotate(320deg) saturate(1.4);" />
-            <div class="hover-content">
-              <div class="line"></div>
-              <p>From $195</p>
-              <h4>Rose Gold Bangle</h4>
-            </div>
-            <div class="try-button-container">
-              <button onclick="showImage('bracelet.png', 'bracelet')">✋ Try On</button>
-            </div>
-          </a>
-          <div class="star">
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-          </div>
-        </div>
-
-      </div><!-- /section-bracelet -->
-
-    </div>
-    <!-- Product Categories End -->
-  </div>
-  <!-- Main Content End -->
-
-  <!-- Footer -->
-  <footer class="footer_area clearfix">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-12 col-lg-4">
-          <div class="single_widget_area">
-            <div class="footer-logo mr-50">
-              <a href="index.html">
-                <img src="img/core-img/logo.png" style="width:12rem;height:12rem;" alt="" />
-              </a>
-            </div>
-            <p class="copywrite">
-              Copyright &copy;
-              <script>document.write(new Date().getFullYear());</script>
-              All rights reserved
-            </p>
-          </div>
-        </div>
-        <div class="col-12 col-lg-8">
-          <div class="single_widget_area">
-            <div class="footer_menu">
-              <nav class="navbar navbar-expand-lg justify-content-end">
-                <div class="collapse navbar-collapse" id="footerNavContent">
-                  <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                      <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                  </ul>
-                </div>
-              </nav>
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="search-content">
+              <form action="#" method="get">
+                <input
+                  type="search"
+                  name="search"
+                  id="search"
+                  placeholder="Type your keyword..."
+                />
+                <button type="submit">
+                  <img src="img/core-img/search.png" alt="" />
+                </button>
+              </form>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </footer>
 
-  <!-- Scripts -->
-  <script src="./neckear.js"></script>
-  <script src="js/jquery/jquery-2.2.4.min.js"></script>
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/plugins.js"></script>
-  <script src="js/active.js"></script>
+    <!-- ── Announcement bar ── -->
+    <div class="topnav">
+      <span>✨ Celebrate with Diamonds — Up to 20% off*</span>
+      <span class="dt-shop-now">Shop Now</span>
+    </div>
 
-  <script>
-    // ── Tab switching ──────────────────────────────────────────────────────
-    function switchTab(type) {
-      // Update button states
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.getElementById('tab-' + type).classList.add('active');
+    <!-- ── Main Content ── -->
+    <div class="main-content-wrapper d-flex clearfix">
+      <img
+        src="b.jpg"
+        style="height: auto; width: 100%"
+        id="bnr"
+        alt="Banner"
+      />
 
-      // Show/hide sections
-      document.querySelectorAll('.category-section').forEach(sec => sec.classList.remove('visible'));
-      document.getElementById('section-' + type).classList.add('visible');
-    }
-  </script>
-</body>
+      <!-- Mobile Nav -->
+      <div class="mobile-nav">
+        <div class="amado-navbar-brand">
+          <a href="index.html"><img src="img/core-img/logo.png" alt="" /></a>
+        </div>
+        <div class="amado-navbar-toggler">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <header class="header-area clearfix">
+        <div class="nav-close">
+          <i class="fa fa-close" aria-hidden="true"></i>
+        </div>
+        <div class="logo">
+          <a href="index.html"><img src="img/core-img/logo.png" alt="" /></a>
+        </div>
+        <nav class="amado-nav">
+          <ul>
+            <li class="active"><a href="index.html">Home</a></li>
+          </ul>
+        </nav>
+        <div class="banner-container">
+          <img src="v.jpg" alt="Banner" />
+          <div class="social-info d-flex justify-content-between mt-30">
+            <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+            <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+            <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+            <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </header>
+
+      <!-- ── Category Tabs & Product Grid ── -->
+      <div class="products-catagories-area clearfix" style="width: 100%">
+        <!-- Tabs -->
+        <div class="category-tabs">
+          <button
+            class="tab-btn active"
+            id="tab-necklace"
+            onclick="switchTab('necklace')"
+          >
+            💎 Necklaces
+          </button>
+          <button
+            class="tab-btn"
+            id="tab-earring"
+            onclick="switchTab('earring')"
+          >
+            💫 Earrings
+          </button>
+          <!-- <button class="tab-btn"        id="tab-bracelet" onclick="switchTab('bracelet')">📿 Bracelets</button> -->
+        </div>
+
+        <!-- ── NECKLACES ── -->
+        <div
+          class="amado-pro-catagory clearfix category-section visible"
+          id="section-necklace"
+        >
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                class="necklace"
+                src="img/new-neck-images/necklace-1.png"
+                alt="Golden Horizon Pendant"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $180</p>
+                <h4>Golden Horizon Pendant</h4>
+              </div>
+              <div class="try-button-container">
+                <button
+                  onclick="
+                    showImage('img/new-neck-images/necklace-1.png', 'neck')
+                  "
+                >
+                  📷 Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                class="necklace"
+                src="img/new-neck-images/necklace-2.png"
+                alt="Sapphire Whisper Chain"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $180</p>
+                <h4>Sapphire Whisper Chain</h4>
+              </div>
+              <div class="try-button-container">
+                <button
+                  onclick="
+                    showImage('img/new-neck-images/necklace-2.png', 'neck')
+                  "
+                >
+                  📷 Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                class="necklace"
+                src="img/necklaces/necklace-3.png"
+                alt="Amethyst Blossom Collar"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $18</p>
+                <h4>Amethyst Blossom Collar</h4>
+              </div>
+              <div class="try-button-container">
+                <button
+                  onclick="showImage('img/necklaces/necklace-3.png', 'neck')"
+                >
+                  📷 Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                class="necklace"
+                src="img/new-neck-images/necklace-6.png"
+                alt="Celestial Glow Gold Choker"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $318</p>
+                <h4>Celestial Glow Gold Choker</h4>
+              </div>
+              <div class="try-button-container">
+                <button
+                  onclick="
+                    showImage('img/new-neck-images/necklace-6.png', 'neck')
+                  "
+                >
+                  📷 Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                class="necklace"
+                src="img/new-neck-images/necklace-5.png"
+                alt="Ethereal Pearl Strand"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $318</p>
+                <h4>Ethereal Pearl Strand</h4>
+              </div>
+              <div class="try-button-container">
+                <button
+                  onclick="
+                    showImage('img/new-neck-images/necklace-5.png', 'neck')
+                  "
+                >
+                  📷 Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                class="necklace"
+                src="img/new-neck-images/up-neck-1.png"
+                alt="Diamond Sparkle Choker"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $318</p>
+                <h4>Diamond Sparkle Choker</h4>
+              </div>
+              <div class="try-button-container">
+                <button
+                  onclick="
+                    showImage('img/new-neck-images/up-neck-1.png', 'neck')
+                  "
+                >
+                  📷 Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span>
+            </div>
+          </div>
+
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                class="necklace"
+                src="img/new-neck-images/necklace-8.png"
+                alt="Rose Gold Infinity Necklace"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $318</p>
+                <h4>Rose Gold Infinity Necklace</h4>
+              </div>
+              <div class="try-button-container">
+                <button
+                  onclick="
+                    showImage('img/new-neck-images/necklace-8.png', 'neck')
+                  "
+                >
+                  📷 Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                class="necklace"
+                src="img/new-neck-images/necklace-9.png"
+                alt="Crystal Cascade Necklace"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $318</p>
+                <h4>Crystal Cascade Necklace</h4>
+              </div>
+              <div class="try-button-container">
+                <button
+                  onclick="
+                    showImage('img/new-neck-images/necklace-9.png', 'neck')
+                  "
+                >
+                  📷 Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+        </div>
+        <!-- /section-necklace -->
+
+        <!-- ── EARRINGS ── -->
+        <div
+          class="amado-pro-catagory clearfix category-section"
+          id="section-earring"
+        >
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                class="earring"
+                src="images/earrings/t-ear-1.png"
+                alt="Moonlit Teardrops"
+                style="height: 16rem; object-fit: contain"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $180</p>
+                <h4>Moonlit Teardrops</h4>
+              </div>
+              <div class="try-button-container">
+                <button
+                  onclick="showImage('images/earrings/t-ear-1.png', 'ear')"
+                >
+                  📷 Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                class="earring"
+                src="images/earrings/t-ear-2.png"
+                alt="Crimson Halo Studs"
+                style="height: 16rem; object-fit: contain"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $180</p>
+                <h4>Crimson Halo Studs</h4>
+              </div>
+              <div class="try-button-container">
+                <button
+                  onclick="showImage('images/earrings/t-ear-2.png', 'ear')"
+                >
+                  📷 Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                class="earring"
+                src="images/earrings/t-ear-3.png"
+                alt="Silver Cascade Hoops"
+                style="height: 16rem; object-fit: contain"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $320</p>
+                <h4>Silver Cascade Hoops</h4>
+              </div>
+              <div class="try-button-container">
+                <button
+                  onclick="showImage('images/earrings/t-ear-3.png', 'ear')"
+                >
+                  📷 Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                class="earring"
+                src="images/earrings/t-ear-4.png"
+                alt="Emerald Breeze Drops"
+                style="height: 16rem; object-fit: contain"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $318</p>
+                <h4>Emerald Breeze Drops</h4>
+              </div>
+              <div class="try-button-container">
+                <button
+                  onclick="showImage('images/earrings/t-ear-4.png', 'ear')"
+                >
+                  📷 Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                class="earring"
+                src="images/earrings/earring-3.png"
+                alt="Golden Drop Earrings"
+                style="height: 16rem; object-fit: contain"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $240</p>
+                <h4>Golden Drop Earrings</h4>
+              </div>
+              <div class="try-button-container">
+                <button
+                  onclick="showImage('images/earrings/earring-3.png', 'ear')"
+                >
+                  📷 Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span>
+            </div>
+          </div>
+        </div>
+        <!-- /section-earring -->
+
+        <!-- ── BRACELETS ── -->
+        <div
+          class="amado-pro-catagory clearfix category-section"
+          id="section-bracelet"
+        >
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                src="bracelet.png"
+                alt="Classic Gold Bracelet"
+                style="height: 14rem; object-fit: contain; padding: 10px"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $220</p>
+                <h4>Classic Gold Bracelet</h4>
+              </div>
+              <div class="try-button-container">
+                <button onclick="showImage('bracelet.png', 'bracelet')">
+                  ✋ Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                src="f.png"
+                alt="Diamond Tennis Bracelet"
+                style="height: 14rem; object-fit: contain; padding: 10px"
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $480</p>
+                <h4>Diamond Tennis Bracelet</h4>
+              </div>
+              <div class="try-button-container">
+                <button onclick="showImage('f.png', 'bracelet')">
+                  ✋ Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span>
+            </div>
+          </div>
+
+          <div class="single-products-catagory clearfix">
+            <a>
+              <img
+                src="bracelet.png"
+                alt="Rose Gold Bangle"
+                style="
+                  height: 14rem;
+                  object-fit: contain;
+                  padding: 10px;
+                  filter: hue-rotate(320deg) saturate(1.4);
+                "
+              />
+              <div class="hover-content">
+                <div class="line"></div>
+                <p>From $195</p>
+                <h4>Rose Gold Bangle</h4>
+              </div>
+              <div class="try-button-container">
+                <button onclick="showImage('bracelet.png', 'bracelet')">
+                  ✋ Try On
+                </button>
+              </div>
+            </a>
+            <div class="star">
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span
+              ><span class="fa fa-star checked"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+        </div>
+        <!-- /section-bracelet -->
+      </div>
+      <!-- Product Categories End -->
+    </div>
+    <!-- Main Content End -->
+
+    <!-- Footer -->
+    <footer class="footer_area clearfix">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-12 col-lg-4">
+            <div class="single_widget_area">
+              <div class="footer-logo mr-50">
+                <a href="index.html">
+                  <img
+                    src="img/core-img/logo.png"
+                    style="width: 12rem; height: 12rem"
+                    alt=""
+                  />
+                </a>
+              </div>
+              <p class="copywrite">
+                Copyright &copy;
+                <script>
+                  document.write(new Date().getFullYear());
+                </script>
+                All rights reserved
+              </p>
+            </div>
+          </div>
+          <div class="col-12 col-lg-8">
+            <div class="single_widget_area">
+              <div class="footer_menu">
+                <nav class="navbar navbar-expand-lg justify-content-end">
+                  <div class="collapse navbar-collapse" id="footerNavContent">
+                    <ul class="navbar-nav ml-auto">
+                      <li class="nav-item active">
+                        <a class="nav-link" href="index.html">Home</a>
+                      </li>
+                    </ul>
+                  </div>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="./neckear.js"></script>
+    <script src="js/jquery/jquery-2.2.4.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/active.js"></script>
+
+    <script>
+      // ── Tab switching ──────────────────────────────────────────────────────
+      function switchTab(type) {
+        // Update button states
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        document.getElementById("tab-" + type).classList.add("active");
+
+        // Show/hide sections
+        document
+          .querySelectorAll(".category-section")
+          .forEach((sec) => sec.classList.remove("visible"));
+        document.getElementById("section-" + type).classList.add("visible");
+      }
+    </script>
+  </body>
 </html>
