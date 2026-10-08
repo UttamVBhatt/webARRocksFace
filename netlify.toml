@@ -1,0 +1,12 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/"
+  to = "/demos/earrings2D/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/demos/earrings2D/index.html"
+  status = 200
